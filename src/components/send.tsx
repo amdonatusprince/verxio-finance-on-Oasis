@@ -50,14 +50,14 @@ export function Send() {
 
   const debouncedAmount = useDebounce(amountWei, 500);
   const debouncedAddr = useDebounce(xdcAddr, 500);
-  const explorerAddress = explorer[chain?.id || 100|| 10200];
+  const explorerAddress = explorer[chain?.id!];
 
   const {
     isError: isPrepareError,
     error: prepareError,
     config,
   } = usePrepareContractWrite({
-    address: registryAddress[chain?.id || 0],
+    address: registryAddress[chain?.id!],
     abi: VerxioPayABI,
     functionName: 'publishAndSend',
     args: [
@@ -70,6 +70,9 @@ export function Send() {
     enabled: debouncedAmount.gt(zero),
   });
 
+  console.log("Balance: ", balance)
+  console.log("Debounced Amount: ", debouncedAmount)
+  console.log("Debounced Amount: ", debouncedAmount.toBigInt())
   const { data, isError, error, write, reset } = useContractWrite(config);
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
